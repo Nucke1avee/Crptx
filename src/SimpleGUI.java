@@ -40,7 +40,7 @@ class SimpleGUI extends JFrame {
                 }
                 locker.doSmthng();
                 message = "Fck Ggl!";
-            } catch (Exception q) {
+            } catch (Throwable q) {
                 message = q.toString();
             }
             JOptionPane.showMessageDialog(null, message, "Output", JOptionPane.PLAIN_MESSAGE);
