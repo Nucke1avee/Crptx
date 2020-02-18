@@ -2,18 +2,18 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class Locker {
+class Locker {
     private String key;
     private String filePath;
     private String buttonPressed;
 
-    public Locker(String key, String filePath, String buttonPressed) {
+    Locker(String key, String filePath, String buttonPressed) {
         this.key = key;
         this.filePath = filePath;
         this.buttonPressed = buttonPressed;
     }
 
-    public void doSmthng() throws IOException {
+    void doSmthng() throws IOException {
         if (buttonPressed.equals("Lock")) {
             lock();
         } else {
@@ -21,27 +21,45 @@ public class Locker {
         }
     }
 
+    //TODO: реализовать что-нить более адекватное (ибо долго и достаточно тупо, хоть и работает)...
     private void lock() throws IOException {
-        System.out.println("We Will Lock You!");
-
         FileInputStream fis = new FileInputStream(filePath);
         FileOutputStream fos = new FileOutputStream(filePath + "l");
 
-        while (fis.available() > 0) {
-            fos.write(fis.read() + 1);
+        if (key.equals("0")) {
+            int i = 0;
+            while (fis.available() > 0) {
+                if (i < 10) {
+                    fos.write(fis.read() + 1);
+                    i++;
+                } else {
+                    fos.write(fis.read());
+                }
+
+            }
+        } else {
+            throw new IOException("fck");
         }
         fos.close();
         fis.close();
     }
 
     private void unlock() throws IOException {
-        System.out.println("Fck ths sht, let me out!");
-
         FileInputStream fis = new FileInputStream(filePath);
         FileOutputStream fos = new FileOutputStream(filePath + "u");
 
-        while (fis.available() > 0) {
-            fos.write(fis.read() - 1);
+        if (key.equals("0")) {
+            int i = 0;
+            while (fis.available() > 0) {
+                if (i < 10) {
+                    fos.write(fis.read() - 1);
+                    i++;
+                } else {
+                    fos.write(fis.read());
+                }
+            }
+        } else {
+            throw new IOException("fck");
         }
         fos.close();
         fis.close();

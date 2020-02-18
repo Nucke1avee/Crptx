@@ -1,29 +1,28 @@
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
 import javax.swing.*;
 
-public class SimpleGUI extends JFrame {
-    private JButton buttonLock = new JButton("Lock");
-    private JButton buttonUnlock = new JButton("Unlock");
+class SimpleGUI extends JFrame {
     private JTextField inputFP = new JTextField("", 5);
     private JTextField inputKey = new JTextField("", 5);
-    private JLabel labelFP = new JLabel("File path = ");
-    private JLabel labelKey = new JLabel("key = ");
 
-    public SimpleGUI() {
+    SimpleGUI() {
         super("CRPTX");
-        this.setBounds(100, 100, 250, 100);
+        this.setBounds(100, 100, 300, 100);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         Container container = this.getContentPane();
         container.setLayout(new GridLayout(3, 2, 2, 2));
+        JLabel labelFP = new JLabel("Путь до файла:");
         container.add(labelFP);
         container.add(inputFP);
+        JLabel labelKey = new JLabel("Ключ (опционально):");
         container.add(labelKey);
         container.add(inputKey);
 
+        JButton buttonLock = new JButton("Lock");
         buttonLock.addActionListener(new ButtonEventListener());
+        JButton buttonUnlock = new JButton("Unlock");
         buttonUnlock.addActionListener(new ButtonEventListener());
         container.add(buttonLock);
         container.add(buttonUnlock);
@@ -31,23 +30,19 @@ public class SimpleGUI extends JFrame {
 
     private class ButtonEventListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            String message = "";
+            String message;
             Locker locker;
             try {
-                //double output = Double.parseDouble(inputFP.getText()) / Double.parseDouble(inputKey.getText());
-                //message = "Z = " + output;
-                //message = e.getActionCommand();
-                locker = new Locker(inputKey.getText(), inputFP.getText(), e.getActionCommand());
+                if (inputKey.getText().isEmpty()) {
+                    locker = new Locker("0", inputFP.getText(), e.getActionCommand());
+                } else {
+                    locker = new Locker(inputKey.getText(), inputFP.getText(), e.getActionCommand());
+                }
                 locker.doSmthng();
                 message = "Fck Ggl!";
             } catch (Exception q) {
-                message = q.getMessage();
+                message = q.toString();
             }
-
-            //message += "Button was pressed\n";
-            //message += "Text is " + input.getText() + "\n";
-            //message += (radio1.isSelected() ? "Radio #1" : "Radio #2") + " is selected!\n";
-            //message += "Checkbox is " + ((check.isSelected()) ? "checked" : "unchecked");
             JOptionPane.showMessageDialog(null, message, "Output", JOptionPane.PLAIN_MESSAGE);
         }
     }
