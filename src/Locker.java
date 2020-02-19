@@ -1,4 +1,7 @@
-import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 class Locker {
     private String key;
@@ -12,57 +15,36 @@ class Locker {
     }
 
     void doSmthng() throws Throwable {
-        if (buttonPressed.equals("Lock")) {
-            lock();
-        } else {
-            unlock();
+        switch (buttonPressed) {
+            case "Lock":
+                lock();
+                break;
+            case "Unlock":
+                unlock();
+                break;
         }
     }
 
-    //TODO: реализовать что-нить более адекватное (ибо долго и достаточно тупо, хоть и работает)...
-    private void lock() throws IOException {
-        FileInputStream fis = new FileInputStream(filePath);
-        FileOutputStream fos = new FileOutputStream(filePath + "l");
+    //TODO: сделать нормальный алгоритм шифрования (мысли на этот счет см.Main)
+    private void lock() throws Throwable {
+        byte[] file = Files.readAllBytes(Paths.get(filePath));
 
-        if (key.equals("0")) {
-            int i = 0;
-            while (fis.available() > 0) {
-                if (i < 10) {
-                    fos.write(fis.read() + 1);
-                    i++;
-                } else {
-                    fos.write(fis.read());
-                }
-            }
-        } else {
-            throw new IOException("\n\"Давай по-новой, Миша, всё хуйня!...\"" +
-                    "\n\n(а если серьезно, то данный функционал пока" +
-                    "\nне доступен, оставьте поле \"Ключ\" пустым)");
+        for (int i = 0; i < file.length; i++) {
+            file[i] += 1;
         }
-        fos.close();
-        fis.close();
+
+        Path path = Paths.get(filePath + "l");
+        Files.write(path, file, StandardOpenOption.CREATE_NEW);
     }
 
-    private void unlock() throws IOException {
-        FileInputStream fis = new FileInputStream(filePath);
-        FileOutputStream fos = new FileOutputStream(filePath + "u");
+    private void unlock() throws Throwable {
+        byte[] file = Files.readAllBytes(Paths.get(filePath));
 
-        if (key.equals("0")) {
-            int i = 0;
-            while (fis.available() > 0) {
-                if (i < 10) {
-                    fos.write(fis.read() - 1);
-                    i++;
-                } else {
-                    fos.write(fis.read());
-                }
-            }
-        } else {
-            throw new IOException("\n\"Давай по-новой, Миша, всё хуйня!...\"" +
-                    "\n\n(а если серьезно, то данный функционал пока" +
-                    "\nне доступен, оставьте поле \"Ключ\" пустым)");
+        for (int i = 0; i < file.length; i++) {
+            file[i] -= 1;
         }
-        fos.close();
-        fis.close();
+
+        Path path = Paths.get(filePath + "u");
+        Files.write(path, file, StandardOpenOption.CREATE_NEW);
     }
 }
