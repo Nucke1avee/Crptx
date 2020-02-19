@@ -1,5 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import javax.swing.*;
 
 class SimpleGUI extends JFrame {
@@ -33,13 +35,22 @@ class SimpleGUI extends JFrame {
             String message;
             Locker locker;
             try {
+                if (inputFP.getText().isEmpty()) {
+                    throw new IOException("\nУкажите путь к файлу");
+                }
                 if (inputKey.getText().isEmpty()) {
                     locker = new Locker("0", inputFP.getText(), e.getActionCommand());
                 } else {
                     locker = new Locker(inputKey.getText(), inputFP.getText(), e.getActionCommand());
                 }
                 locker.doSmthng();
-                message = "Fck Ggl!";
+                message = "Готово!" +
+                        "\nНовый файл находится в директории" +
+                        "\nрядом с исходным файлом.";
+            } catch (NoSuchFileException q) {
+                message = q.toString() +
+                        "\nФайл не найден." +
+                        "\nПроверьте корректность введенных данных.";
             } catch (Throwable q) {
                 message = q.toString();
             }

@@ -1,7 +1,4 @@
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 
 class Locker {
     private String key;
@@ -33,7 +30,7 @@ class Locker {
             file[i] += 1;
         }
 
-        Path path = Paths.get(filePath + "l");
+        Path path = Paths.get(filePath + "l"); //можно заморочиться с нормальными именами, но лень...
         Files.write(path, file, StandardOpenOption.CREATE_NEW);
     }
 
