@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.nio.file.*;
 
 class Locker {
@@ -14,34 +15,72 @@ class Locker {
     void doSmthng() throws Throwable {
         switch (buttonPressed) {
             case "Lock":
-                lock();
+                if (key.isEmpty()) {
+                    simpleLock();
+                } else {
+                    lock();
+                }
                 break;
             case "Unlock":
-                unlock();
+                if (key.isEmpty()) {
+                    simpleUnlock();
+                } else {
+                    unlock();
+                }
                 break;
         }
     }
 
-    //TODO: сделать нормальный алгоритм шифрования (мысли на этот счет см.Main)
-    private void lock() throws Throwable {
+    //TODO: сделать нормальные генерируемые имена
+    private void simpleLock() throws Throwable {
         byte[] file = Files.readAllBytes(Paths.get(filePath));
-
         for (int i = 0; i < file.length; i++) {
             file[i] += 1;
         }
-
-        Path path = Paths.get(filePath + "l"); //можно заморочиться с нормальными именами, но лень...
+        Path path = Paths.get(filePath + "l");
         Files.write(path, file, StandardOpenOption.CREATE_NEW);
+    }
+
+    private void simpleUnlock() throws Throwable {
+        byte[] file = Files.readAllBytes(Paths.get(filePath));
+        for (int i = 0; i < file.length; i++) {
+            file[i] -= 1;
+        }
+        Path path = Paths.get(filePath + "u");
+        Files.write(path, file, StandardOpenOption.CREATE_NEW);
+    }
+
+    private void lock() throws Throwable {
+        byte[] file = Files.readAllBytes(Paths.get(filePath));
+        byte[] key = this.key.getBytes();
+        int fileLength = file.length;
+        int keyLength = key.length;
+        if (fileLength < keyLength)
+            throw new IOException("\nФайл слишком мал: проверьте файл или\nпопробуйте оставить поле \"Ключ\" пустым");
+        byte[] tmp = new byte[fileLength];
+
+        for (int i = 0; i < fileLength; i++) {
+            tmp[i] = (byte) (file[i] + key[i % keyLength]);
+        }
+
+        Path path = Paths.get(filePath + "l");
+        Files.write(path, tmp, StandardOpenOption.CREATE_NEW);
     }
 
     private void unlock() throws Throwable {
         byte[] file = Files.readAllBytes(Paths.get(filePath));
+        byte[] key = this.key.getBytes();
+        int fileLength = file.length;
+        int keyLength = key.length;
+        if (fileLength < keyLength)
+            throw new IOException("\nФайл слишком мал: проверьте файл или\nпопробуйте оставить поле \"Ключ\" пустым");
+        byte[] tmp = new byte[fileLength];
 
-        for (int i = 0; i < file.length; i++) {
-            file[i] -= 1;
+        for (int i = 0; i < fileLength; i++) {
+            tmp[i] = (byte) (file[i] - key[i % keyLength]);
         }
 
         Path path = Paths.get(filePath + "u");
-        Files.write(path, file, StandardOpenOption.CREATE_NEW);
+        Files.write(path, tmp, StandardOpenOption.CREATE_NEW);
     }
 }

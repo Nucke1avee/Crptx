@@ -39,7 +39,7 @@ class SimpleGUI extends JFrame {
                     throw new IOException("\nУкажите путь к файлу");
                 }
                 if (inputKey.getText().isEmpty()) {
-                    locker = new Locker("0", inputFP.getText(), e.getActionCommand());
+                    locker = new Locker("", inputFP.getText(), e.getActionCommand());
                 } else {
                     locker = new Locker(inputKey.getText(), inputFP.getText(), e.getActionCommand());
                 }
@@ -54,7 +54,7 @@ class SimpleGUI extends JFrame {
             } catch (Throwable q) {
                 message = q.toString();
             }
-            JOptionPane.showMessageDialog(null, message, "Output", JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(null, message, "Результат", JOptionPane.PLAIN_MESSAGE);
         }
     }
 }
