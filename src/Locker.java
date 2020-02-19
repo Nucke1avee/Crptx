@@ -19,59 +19,6 @@ class Locker {
         }
     }
 
- /*   private void lock() throws Throwable {
-        FileInputStream fis = new FileInputStream(filePath);
-        FileOutputStream fos = new FileOutputStream(filePath + "l");
-
-        encryptOrDecrypt(key, Cipher.ENCRYPT_MODE, fis, fos);
-
-        fos.close();
-        fis.close();
-    }
-
-    private void unlock() throws Throwable {
-        FileInputStream fis = new FileInputStream(filePath);
-        FileOutputStream fos = new FileOutputStream(filePath + "u");
-
-        encryptOrDecrypt(key, Cipher.DECRYPT_MODE, fis, fos);
-
-        fos.close();
-        fis.close();
-    }
-
-    private void encryptOrDecrypt(String key, int mode, FileInputStream fis, FileOutputStream fos) throws Throwable{
-        KeyGenerator keyGenerator = KeyGenerator.getInstance("Blowfish");
-        keyGenerator.init(128);
-        ///////////////////////
-        Key secretKey = keyGenerator.generateKey();
-        Cipher cipher = Cipher.getInstance("Blowfish/CFB/NoPadding");
-
-        if (mode == Cipher.ENCRYPT_MODE) {
-
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-            CipherInputStream cis = new CipherInputStream(fis, cipher);
-            doCopy(cis, fos);
-        } else if (mode == Cipher.DECRYPT_MODE) {
-
-            cipher.init(Cipher.DECRYPT_MODE, secretKey);
-            CipherOutputStream cos = new CipherOutputStream(fos, cipher);
-            doCopy(fis, cos);
-        }
-    }
-
-    private static void doCopy(InputStream is, OutputStream os)
-            throws IOException {
-        byte[] bytes = new byte[64];
-        int numBytes;
-        while ((numBytes = is.read(bytes)) != -1) {
-            os.write(bytes, 0, numBytes);
-        }
-        os.flush();
-        os.close();
-        is.close();
-    }
-*/
-
     //TODO: реализовать что-нить более адекватное (ибо долго и достаточно тупо, хоть и работает)...
     private void lock() throws IOException {
         FileInputStream fis = new FileInputStream(filePath);
@@ -86,7 +33,6 @@ class Locker {
                 } else {
                     fos.write(fis.read());
                 }
-
             }
         } else {
             throw new IOException("\n\"Давай по-новой, Миша, всё хуйня!...\"" +
