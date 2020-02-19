@@ -1,9 +1,4 @@
-import javax.crypto.Cipher;
-import javax.crypto.CipherInputStream;
-import javax.crypto.CipherOutputStream;
-import javax.crypto.KeyGenerator;
 import java.io.*;
-import java.security.Key;
 
 class Locker {
     private String key;
@@ -24,7 +19,7 @@ class Locker {
         }
     }
 
-    private void lock() throws Throwable {
+ /*   private void lock() throws Throwable {
         FileInputStream fis = new FileInputStream(filePath);
         FileOutputStream fos = new FileOutputStream(filePath + "l");
 
@@ -75,9 +70,8 @@ class Locker {
         os.close();
         is.close();
     }
+*/
 
-
-/*
     //TODO: реализовать что-нить более адекватное (ибо долго и достаточно тупо, хоть и работает)...
     private void lock() throws IOException {
         FileInputStream fis = new FileInputStream(filePath);
@@ -116,9 +110,9 @@ class Locker {
                 }
             }
         } else {
-            throw new IOException("fck");
+            throw new IOException("Давай по-новой, Миша, всё хуйня!...");
         }
         fos.close();
         fis.close();
-    }*/
+    }
 }
